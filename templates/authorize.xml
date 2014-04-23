@@ -1,0 +1,13 @@
+<html xmlns:t="http://twistedmatrix.com/ns/twisted.web.template/0.1">
+<body>
+  
+  <p>This application has requested access to your data:</p>
+  <div t:render="application_title" />
+  <div t:render="application_descr" />
+
+ <form action="/oauth/authorize" method="post">
+    <input type="submit" name="action" value="Allow" /> 
+    <input type="submit" name="action" value="Deny" />
+ </form> 
+</body>
+</html>

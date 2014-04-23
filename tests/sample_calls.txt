@@ -1,0 +1,29 @@
+Get request token:
+
+curl -i -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "oauth_signature_method=PLAINTEXT&oauth_consumer_key=b3af4e669daf880fb16563e6f36051b105188d413&oauth_nonce=12345678901234567890&oauth_timestamp=1467851434&oauth_callback=http%3A%2F%2Fexample%2Ecom%2Fcallback&oauth_signature=c168e65c18d75b35d8999b534a3776cf%26" "http://localhost:8080/oauth/request_token"
+
+
+Authorize:
+
+curl -i -X GET "http://localhost:8080/oauth/authorize?oauth_token=hh5s93j4hdidpola"
+
+
+Access token (Invalid resource owner):
+
+curl -i -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "oauth_signature_method=HMAC-SHA1&oauth_consumer_key=b3af4e669daf880fb16563e6f36051b105188d413&oauth_nonce=12345678901234567890&oauth_timestamp=1467851434&oauth_token=5623159eac3105770e29e61268e88ac0&oauth_verifier=ea26d4734f&oauth_signature=c168e65c18d75b35d8999b534a3776cf%26" "http://localhost:8080/oauth/access_token"
+
+
+Access token (Invalid customer):
+
+curl -i -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "oauth_signature_method=HMAC-SHA1&oauth_consumer_key=b3af4e669daf880fb16563e6f36051b105188d413&oauth_nonce=12345678901234567890&oauth_timestamp=1467851434&oauth_token=a33bb8c13a2722f9997c7976cbfd1bcc&oauth_verifier=280dbe203d&oauth_signature=c168e65c18d75b35d8999b534a3776cf%26" "http://localhost:8080/oauth/access_token"
+
+
+ oauth_consumer_key=dpf43f3p2l4k3l03
+ oauth_token=hh5s93j4hdidpola
+ oauth_signature_method=PLAINTEXT
+ oauth_signature=kd94hf93k423kf4426hdhd0244k9j7ao03
+ oauth_timestamp=1191242092
+ oauth_nonce=dji430splmx33448
+ oauth_version=1.0
+oauth_verifier=hfdp7dh39dks9884
+
