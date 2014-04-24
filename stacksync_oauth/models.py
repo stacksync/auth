@@ -1,5 +1,6 @@
 import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, UniqueConstraint
+from sqlalchemy.dialects.postgresql.base import UUID
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -7,23 +8,26 @@ Base = declarative_base()
 
 class ResourceOwner(Base):
 
-    __tablename__ = "users"
+    __tablename__ = "user1"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(UUID, primary_key=True)
     name = Column(String)
     email = Column(String)
-    password = Column(String)
+    swift_user = Column(String)
+    swift_account = Column(String)
+    quota_used = Column(Integer)
+    quota_limit = Column(Integer)
 
 
 class Consumer(Base):
 
-    __tablename__ = "consumers"
+    __tablename__ = "oauth1_consumers"
 
     id = Column(Integer, primary_key=True)
     consumer_key = Column(String)
     consumer_secret = Column(String)
     rsa_key = Column(String)
-    user = Column(Integer, ForeignKey("users.id"))
+    user = Column(UUID, ForeignKey("user1.id"))
     realm = Column(String)
     redirect_uri = Column(String)
     application_title = Column(String)
@@ -35,11 +39,11 @@ class Consumer(Base):
 
 class RequestToken(Base):
 
-    __tablename__ = "request_tokens"
+    __tablename__ = "oauth1_request_tokens"
 
     id = Column(Integer, primary_key=True)
-    consumer = Column(Integer, ForeignKey("consumers.id"))
-    user = Column(Integer, ForeignKey("users.id"))
+    consumer = Column(Integer, ForeignKey("oauth1_consumers.id"))
+    user = Column(UUID, ForeignKey("user1.id"))
     realm = Column(String)
     redirect_uri = Column(String)
     request_token = Column(String)
@@ -51,11 +55,11 @@ class RequestToken(Base):
 
 class AccessToken(Base):
 
-    __tablename__ = "access_tokens"
+    __tablename__ = "oauth1_access_tokens"
 
     id = Column(Integer, primary_key=True)
-    consumer = Column(Integer, ForeignKey("consumers.id"))
-    user = Column(Integer, ForeignKey("users.id"))
+    consumer = Column(Integer, ForeignKey("oauth1_consumers.id"))
+    user = Column(UUID, ForeignKey("user1.id"))
     realm = Column(String)
     access_token = Column(String)
     access_token_secret = Column(String)
@@ -65,7 +69,7 @@ class AccessToken(Base):
 
 class Nonce(Base):
 
-    __tablename__ = "nonce"
+    __tablename__ = "oauth1_nonce"
 
     id = Column(Integer, primary_key=True)
     consumer_key = Column('consumer_key', String)

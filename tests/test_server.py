@@ -203,7 +203,8 @@ class AccessTokenResource(resource.Resource):
 
         credentials = {'user_id': '1'}
 
-        h, b, s = provider.create_access_token_response(url, http_method=request.method, body=body, headers=headers, credentials=credentials)
+        h, b, s = provider.create_access_token_response(url, http_method=request.method, body=body, headers=headers,
+                                                        credentials=credentials)
 
         for key, elem in h.items():
             request.responseHeaders.addRawHeader(key.encode('utf-8'), elem.encode('utf-8'))
@@ -261,8 +262,10 @@ class ProtectedResource(resource.Resource):
 Headers._caseMappings['content-type'] = 'Content-Type'
 
 dbsession = scoped_session(sessionmaker())
-engine = create_engine("sqlite:///foo.db", echo=False)
+#engine = create_engine("sqlite:///foo.db", echo=False)
+engine = create_engine("postgresql://stacksync_user:stacksync@localhost/stacksync")
 dbsession.configure(bind=engine, autoflush=False, expire_on_commit=False)
+
 #Base.metadata.drop_all(engine)
 #Base.metadata.create_all(engine)
 
