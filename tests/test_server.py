@@ -205,10 +205,7 @@ class AccessTokenResource(resource.Resource):
         body = request.content.getvalue()
         url = 'http://localhost:8080%s' % (request.uri,)
 
-        credentials = {'user_id': '1'}
-
-        h, b, s = provider.create_access_token_response(url, http_method=request.method, body=body, headers=headers,
-                                                        credentials=credentials)
+        h, b, s = provider.create_access_token_response(url, http_method=request.method, body=body, headers=headers)
 
         for key, elem in h.items():
             request.responseHeaders.addRawHeader(key.encode('utf-8'), elem.encode('utf-8'))

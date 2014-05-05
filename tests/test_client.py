@@ -9,7 +9,8 @@ from oauthlib.oauth1 import SIGNATURE_PLAINTEXT, SIGNATURE_TYPE_AUTH_HEADER, SIG
 import requests
 
 
-BASE_URL = "http://10.30.239.237:8080/oauth"
+#BASE_URL = "http://10.30.239.237:8080/oauth"
+BASE_URL = "http://localhost:8080/oauth"
 CLIENT_KEY = "b3af4e669daf880fb16563e6f36051b105188d413"
 CLIENT_SECRET = "c168e65c18d75b35d8999b534a3776cf"
 REQUEST_TOKEN_ENDPOINT = "/request_token"
@@ -18,7 +19,7 @@ ACCESS_TOKEN_ENDPOINT = "/access_token"
 
 class Test(unittest.TestCase):
 
-    def test_request_token_headers_params(self):
+    def __test_request_token_headers_params(self):
         client = oauth1.Client(CLIENT_KEY,
                                client_secret=CLIENT_SECRET,
                                signature_type=SIGNATURE_TYPE_AUTH_HEADER,
@@ -78,14 +79,14 @@ class Test(unittest.TestCase):
         oauth_response = dict(decoded_data)
         assert 'oauth_token' in oauth_response and 'oauth_token_secret' in oauth_response
 
-    def __test_access_token_query_params(self):
+    def test_access_token_query_params(self):
         client = oauth1.Client(CLIENT_KEY,
                                client_secret=CLIENT_SECRET,
                                signature_type=SIGNATURE_TYPE_QUERY,
                                signature_method=SIGNATURE_PLAINTEXT,
-                               resource_owner_key='V7jictT3VGpSG7IAkiY2F9naaQ0bRe',
-                               resource_owner_secret='h4x6lTb5UIgCFt0UOy1VJ0uQgcY68h',
-                               verifier='69qjCUfvYp3LjmgBJfz0FN9EMVOp6m')
+                               resource_owner_key='pNaNIcpyQtNOpEqL8GOBS9Dt6Cw4kv',
+                               resource_owner_secret='lNFrPiqfwrU5uxuyflZrmFB437gzKT',
+                               verifier='nDH1wIcGVBcsXa668j4CIQulXRb67o')
         url = BASE_URL + ACCESS_TOKEN_ENDPOINT
         uri, headers, _ = client.sign(url,
                                       http_method='GET')

@@ -248,7 +248,7 @@ class AuthValidator(RequestValidator):
         try:
             consumer = self.dbsession.query(Consumer).filter_by(consumer_key=request.client_key).one()
             access_token = AccessToken()
-            access_token.user = token['user_id']
+            access_token.user = request.request_token.user
             access_token.consumer = consumer.id
             access_token.realm = "stacksync"
             access_token.redirect_uri = request.redirect_uri
@@ -276,23 +276,6 @@ class AuthValidator(RequestValidator):
                 return None
             c = self.dbsession.query(Consumer).filter_by(id=r.consumer).one()
             return r, c
-        except NoResultFound:
-            return None
-
-    def verify_access_token_request(self, request_token):
-        """Verifies that the given request token is valid for an access token
-        request and returns the RequestToken object. """
-        log.debug('Verify access token request for token %r', request_token)
-        try:
-            r = self.dbsession.query(RequestToken).filter_by(request_token=request_token).one()
-            if not r.consumer:
-                return None
-            if not r.user:
-                return None
-            if not r.verifier:
-                # This token has not been authorized yet
-                return None
-            return r
         except NoResultFound:
             return None
 
