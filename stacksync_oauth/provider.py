@@ -15,9 +15,6 @@ class AuthProvider(RequestTokenEndpoint, AuthorizationEndpoint,
     def verify_authorize_request(self, request_token):
         return self.request_validator.verify_authorize(request_token)
 
-    def verify_access_token_request(self, request_token):
-        return self.request_validator.verify_access_token_request(request_token)
-
     def authorize_request_token(self, request_token, user):
         verifier = self.token_generator()
         request = Request('')
