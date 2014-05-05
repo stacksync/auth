@@ -20,3 +20,11 @@ class AuthProvider(RequestTokenEndpoint, AuthorizationEndpoint,
         request = Request('')
         request.resource_owner_key = user
         return self.request_validator.save_verifier(request_token, verifier, request)
+
+    def verify_authorize_submission(self, request_token, user_email):
+        user = self.request_validator.verify_user_email(user_email)
+        token_and_consumer = self.request_validator.verify_authorize(request_token)
+        if not user or not token_and_consumer:
+            return None
+        token, consumer = token_and_consumer
+        return user, token, consumer

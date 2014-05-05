@@ -3,7 +3,7 @@ import datetime
 from oauthlib.oauth1 import RequestValidator, SIGNATURE_PLAINTEXT, SIGNATURE_HMAC
 from sqlalchemy.orm.exc import NoResultFound
 
-from stacksync_oauth.models import Consumer, RequestToken, Nonce
+from stacksync_oauth.models import Consumer, RequestToken, Nonce, ResourceOwner
 from stacksync_oauth.models import AccessToken
 
 log = logging.getLogger('stacksync_oauth')
@@ -273,5 +273,13 @@ class AuthValidator(RequestValidator):
                 return None
             c = self.dbsession.query(Consumer).filter_by(id=r.consumer).one()
             return r, c
+        except NoResultFound:
+            return None
+
+    def verify_user_email(self, email):
+        """Validates and returns the user with the given email."""
+        log.debug('Validate user email %r', email)
+        try:
+            return self.dbsession.query(ResourceOwner).filter_by(email=email).one()
         except NoResultFound:
             return None
