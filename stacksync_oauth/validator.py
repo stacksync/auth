@@ -72,8 +72,8 @@ class AuthValidator(RequestValidator):
                   token, client_key)
         try:
             request_token, consumer = self.dbsession.query(RequestToken, Consumer).join(Consumer,
-                                                    RequestToken.consumer == Consumer.id).filter(
-                                                    RequestToken.request_token == token, Consumer.consumer_key == client_key).one()
+                                                                                        RequestToken.consumer == Consumer.id).filter(
+                RequestToken.request_token == token, Consumer.consumer_key == client_key).one()
             if consumer.consumer_key == client_key:
                 request.request_token = request_token
                 return True
@@ -146,8 +146,9 @@ class AuthValidator(RequestValidator):
 
         try:
             _, _ = self.dbsession.query(RequestToken, Consumer).join(Consumer,
-                                                    RequestToken.consumer == Consumer.id).filter(
-                                                    RequestToken.request_token == token, RequestToken.verifier == verifier, Consumer.consumer_key == client_key).one()
+                                                                     RequestToken.consumer == Consumer.id).filter(
+                RequestToken.request_token == token, RequestToken.verifier == verifier,
+                Consumer.consumer_key == client_key).one()
             return True
         except NoResultFound:
             return False
@@ -237,7 +238,8 @@ class AuthValidator(RequestValidator):
             return verifier
         except NoResultFound:
             return None
-        except:
+        except Exception as inst:
+            log.error('Error saving access token: %s' % inst)
             self.dbsession.rollback()
 
     def save_access_token(self, token, request):
@@ -257,7 +259,8 @@ class AuthValidator(RequestValidator):
             return True
         except NoResultFound:
             return None
-        except:
+        except Exception as inst:
+            log.error('Error saving access token: %s' % inst)
             self.dbsession.rollback()
             return None
 
@@ -273,6 +276,23 @@ class AuthValidator(RequestValidator):
                 return None
             c = self.dbsession.query(Consumer).filter_by(id=r.consumer).one()
             return r, c
+        except NoResultFound:
+            return None
+
+    def verify_access_token_request(self, request_token):
+        """Verifies that the given request token is valid for an access token
+        request and returns the RequestToken object. """
+        log.debug('Verify access token request for token %r', request_token)
+        try:
+            r = self.dbsession.query(RequestToken).filter_by(request_token=request_token).one()
+            if not r.consumer:
+                return None
+            if not r.user:
+                return None
+            if not r.verifier:
+                # This token has not been authorized yet
+                return None
+            return r
         except NoResultFound:
             return None
 

@@ -66,7 +66,11 @@ class Simple(resource.Resource):
         return resource.Resource.getChild(self, name, request)
 
     def render_GET(self, request):
-        return "Prepath=%r, Args=%r" % (request.prepath, request.args,)
+        user, token, consumer = provider.verify_authorize_submission('pNaNIcpyQtNOpEqL8GOBS9Dt6Cw4kv', 'a@a.a')
+        result2 = provider.authorize_request_token(token.request_token, user.id)
+        return result, result2
+
+        #return "Prepath=%r, Args=%r" % (request.prepath, request.args,)
         # return "Hello, world! I am located at %r." % (request.prepath,)
 
 
@@ -267,7 +271,7 @@ engine = create_engine("postgresql://stacksync_user:stacksync@localhost/stacksyn
 dbsession.configure(bind=engine, autoflush=False, expire_on_commit=False)
 
 #Base.metadata.drop_all(engine)
-#Base.metadata.create_all(engine)
+Base.metadata.create_all(engine)
 
 validator = AuthValidator(dbsession)
 provider = AuthProvider(validator)

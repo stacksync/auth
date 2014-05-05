@@ -3,6 +3,6 @@ StackSync Authentication service
 """
 
 #: Version information ``(major, minor, revision)``.
-__version_info__ = (1, 0, 6)
+__version_info__ = (1, 0, 8)
 #: Version string ``'major.minor.revision'``.
 __version__ = '.'.join(map(str, __version_info__))
