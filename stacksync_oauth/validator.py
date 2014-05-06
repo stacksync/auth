@@ -19,15 +19,15 @@ class AuthValidator(RequestValidator):
 
     @property
     def client_key_length(self):
-        return 32, 64
+        return 30, 64
 
     @property
     def request_token_length(self):
-        return 1, 64
+        return 30, 64
 
     @property
     def access_token_length(self):
-        return 32, 64
+        return 30, 64
 
     @property
     def nonce_length(self):
@@ -198,7 +198,7 @@ class AuthValidator(RequestValidator):
         log.debug('Get access token secret of %r for client %r',
                   token, client_key)
         try:
-            access_token = AccessToken.query.filter_by(access_token=token).one()
+            access_token = self.dbsession.query(AccessToken).filter_by(access_token=token).one()
             return access_token.access_token_secret
         except NoResultFound:
             return None

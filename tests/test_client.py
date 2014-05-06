@@ -9,8 +9,8 @@ from oauthlib.oauth1 import SIGNATURE_PLAINTEXT, SIGNATURE_TYPE_AUTH_HEADER, SIG
 import requests
 
 
-BASE_URL = "http://10.30.239.237:8080/oauth"
-#BASE_URL = "http://localhost:8080/oauth"
+#BASE_URL = "http://10.30.239.237:8080/oauth"
+BASE_URL = "http://localhost:8080/oauth"
 CLIENT_KEY = "b3af4e669daf880fb16563e6f36051b105188d413"
 CLIENT_SECRET = "c168e65c18d75b35d8999b534a3776cf"
 REQUEST_TOKEN_ENDPOINT = "/request_token"
@@ -79,7 +79,7 @@ class Test(unittest.TestCase):
         oauth_response = dict(decoded_data)
         assert 'oauth_token' in oauth_response and 'oauth_token_secret' in oauth_response
 
-    def test_access_token_query_params(self):
+    def __test_access_token_query_params(self):
         client = oauth1.Client(CLIENT_KEY,
                                client_secret=CLIENT_SECRET,
                                signature_type=SIGNATURE_TYPE_QUERY,
@@ -101,20 +101,22 @@ class Test(unittest.TestCase):
         oauth_response = dict(decoded_data)
         assert 'oauth_token' in oauth_response and 'oauth_token_secret' in oauth_response
 
-    def __test_protected_resource(self):
+    def test_protected_resource(self):
         client = oauth1.Client(CLIENT_KEY,
                                client_secret=CLIENT_SECRET,
                                signature_type=SIGNATURE_TYPE_QUERY,
                                signature_method=SIGNATURE_PLAINTEXT,
-                               resource_owner_key='08f8404a0ea79d0916507206ffdaac0e',
-                               resource_owner_secret='b5c1b22175d66451f4bfe87749f94ca0')
-        url = self.base_url % ('resource', )
+                               resource_owner_key='xet2wlgfkCiRtAX2ZSmyRSCAHZwkUo',
+                               resource_owner_secret='M4Oqu5abf0zVo9tXkyvoxeHGPUAswX')
+        url = BASE_URL + '/resource'
         uri, headers, _ = client.sign(url,
                                       http_method='GET')
-        req = urllib2.Request(str(uri), headers=headers)
-        resp = urllib2.urlopen(req)
-        data = resp.read()
-        assert 'OK' in data
+        headers['StackSync-API'] = "v2"
+        r = requests.get(uri, headers=headers)
+
+        print r.text
+
+        assert 200 <= r.status_code < 300
 
 
 if __name__ == "__main__":

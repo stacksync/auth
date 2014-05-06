@@ -224,38 +224,23 @@ class ProtectedResource(resource.Resource):
         self.provider = provider
 
     def render(self, request):
-        """
-        auth_server = AuthServer()
-        method = request.method
-        uri = request.uri
-        headers = request.received_headers.copy()
+        headers = {}
+        for k, v in request.received_headers._headers.getAllRawHeaders():
+            headers[k] = v[-1]
+
         body = request.content.getvalue()
-        requested_uri = 'http://%s%s' % (headers['host'], uri)
+        url = 'http://localhost:8080%s' % (request.uri,)
 
-        try:
-            result, params = auth_server.verify_request(requested_uri,
-                                                        http_method=method,
-                                                        body=body,
-                                                        headers=headers,
-                                                        require_resource_owner=True,
-                                                        require_verifier=False,
-                                                        require_realm=False,
-                                                        require_callback=False)
+        valid, oauth_info = self.provider.validate_protected_resource_request(url, http_method=request.method,
+                                                                              body=body,
+                                                                              headers=headers)
+        if valid:
+            b = 'User id: %s<br />Swift account: %s' % (oauth_info.user.id, oauth_info.user.swift_account)
+            request.write(b.encode('utf-8'))
+            request.setResponseCode(200)
+        else:
+            request.setResponseCode(401)
 
-            if not result:
-                request.setResponseCode(401)
-                request.write("Validation failed")
-                request.finish()
-                return server.NOT_DONE_YET
-
-        except ValueError as inst:
-            request.setResponseCode(400)
-            request.write(str(inst))
-            request.finish()
-            return server.NOT_DONE_YET
-
-        """
-        request.write("OK")
         request.finish()
         return server.NOT_DONE_YET
 
