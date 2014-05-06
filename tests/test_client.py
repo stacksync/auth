@@ -9,8 +9,8 @@ from oauthlib.oauth1 import SIGNATURE_PLAINTEXT, SIGNATURE_TYPE_AUTH_HEADER, SIG
 import requests
 
 
-#BASE_URL = "http://10.30.239.237:8080/oauth"
-BASE_URL = "http://localhost:8080/oauth"
+BASE_URL = "http://10.30.239.237:8080/oauth"
+#BASE_URL = "http://localhost:8080/oauth"
 CLIENT_KEY = "b3af4e669daf880fb16563e6f36051b105188d413"
 CLIENT_SECRET = "c168e65c18d75b35d8999b534a3776cf"
 REQUEST_TOKEN_ENDPOINT = "/request_token"
@@ -90,10 +90,14 @@ class Test(unittest.TestCase):
         url = BASE_URL + ACCESS_TOKEN_ENDPOINT
         uri, headers, _ = client.sign(url,
                                       http_method='GET')
-        req = urllib2.Request(str(uri), headers=headers)
-        resp = urllib2.urlopen(req)
-        data = resp.read()
-        decoded_data = urldecode(data)
+
+        headers['StackSync-API'] = "v2"
+        r = requests.get(uri, headers=headers)
+
+        if 200 < r.status_code >= 300:
+            assert False
+
+        decoded_data = urldecode(r.text)
         oauth_response = dict(decoded_data)
         assert 'oauth_token' in oauth_response and 'oauth_token_secret' in oauth_response
 

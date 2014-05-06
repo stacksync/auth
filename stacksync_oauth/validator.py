@@ -86,9 +86,16 @@ class AuthValidator(RequestValidator):
         log.debug('Validate access token %r for client %r',
                   token, client_key)
         try:
-            AccessToken.query.filter_by(access_token=token).one()
-            #TODO: check the consumer key
-            return True
+            access_token, consumer, user = self.dbsession.query(AccessToken, Consumer, ResourceOwner)\
+                .join(Consumer, AccessToken.consumer == Consumer.id)\
+                .join(ResourceOwner, AccessToken.user == ResourceOwner.id)\
+                .filter(AccessToken.access_token == token, Consumer.consumer_key == client_key)\
+                .one()
+            if consumer.consumer_key == client_key:
+                request.access_token = access_token
+                request.user = user
+                return True
+            return False
         except NoResultFound:
             return False
 
@@ -222,7 +229,8 @@ class AuthValidator(RequestValidator):
             return True
         except NoResultFound:
             return None
-        except:
+        except Exception as inst:
+            log.error('Error saving request token: %s' % inst)
             self.dbsession.rollback()
             return None
 
