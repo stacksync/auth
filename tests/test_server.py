@@ -34,7 +34,7 @@ registerAdapter(SessionInfo, Session, ISessionInfo)
 
 
 class AuthorizeElement(Element):
-    loader = XMLFile('authorize.xml')
+    loader = XMLFile('templates/authorize.xml')
 
     def __init__(self, consumer):
         self.consumer = consumer
@@ -64,14 +64,6 @@ class Simple(resource.Resource):
         if name == '':
             return self
         return resource.Resource.getChild(self, name, request)
-
-    def render_GET(self, request):
-        user, token, consumer = provider.verify_authorize_submission('pNaNIcpyQtNOpEqL8GOBS9Dt6Cw4kv', 'a@a.a')
-        result2 = provider.authorize_request_token(token.request_token, user.id)
-        return result, result2
-
-        #return "Prepath=%r, Args=%r" % (request.prepath, request.args,)
-        # return "Hello, world! I am located at %r." % (request.prepath,)
 
 
 class RequestTokenResource(resource.Resource):
@@ -142,7 +134,7 @@ class AuthorizeResource(resource.Resource):
 
     def render_POST(self, request):
         # get the user from a session
-        user_id = 1
+        user_id = '041a597e-fb19-4f97-b8e8-0fd40a0cbfb0'
 
         session = request.getSession()
 

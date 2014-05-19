@@ -163,7 +163,13 @@ class AuthValidator(RequestValidator):
     def invalidate_request_token(self, client_key, request_token, request):
         """Invalidates a used request token."""
         log.debug('Invalidate token for client %r, request token %r', client_key, request_token)
-        #TODO: invalidate request token, i.e., remove it from the DB or mark it as used
+        try:
+            consumer = self.dbsession.query(Consumer).filter_by(consumer_key=request.client_key).one()
+            self.dbsession.query(RequestToken).filter_by(consumer=consumer.id, request_token=request_token).delete()
+            self.dbsession.commit()
+        except Exception as inst:
+            log.error('Could not invalidate request token %r for client %r', request_token, client_key)
+            self.dbsession.rollback()
 
     def get_client_secret(self, client_key, request):
         """Get client secret.

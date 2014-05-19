@@ -79,14 +79,14 @@ class Test(unittest.TestCase):
         oauth_response = dict(decoded_data)
         assert 'oauth_token' in oauth_response and 'oauth_token_secret' in oauth_response
 
-    def __test_access_token_query_params(self):
+    def test_access_token_query_params(self):
         client = oauth1.Client(CLIENT_KEY,
                                client_secret=CLIENT_SECRET,
                                signature_type=SIGNATURE_TYPE_QUERY,
                                signature_method=SIGNATURE_PLAINTEXT,
-                               resource_owner_key='pNaNIcpyQtNOpEqL8GOBS9Dt6Cw4kv',
-                               resource_owner_secret='lNFrPiqfwrU5uxuyflZrmFB437gzKT',
-                               verifier='nDH1wIcGVBcsXa668j4CIQulXRb67o')
+                               resource_owner_key='HJUCE34yYlRToKKu7fXq90bmRmZm1j',
+                               resource_owner_secret='4VVbhBQXcAdJhw42lTvGk0qN1F1Moe',
+                               verifier='cXqtvQxfP6EReq7A6ulLKbOrXeflTk')
         url = BASE_URL + ACCESS_TOKEN_ENDPOINT
         uri, headers, _ = client.sign(url,
                                       http_method='GET')
@@ -101,7 +101,7 @@ class Test(unittest.TestCase):
         oauth_response = dict(decoded_data)
         assert 'oauth_token' in oauth_response and 'oauth_token_secret' in oauth_response
 
-    def test_protected_resource(self):
+    def __test_protected_resource(self):
         client = oauth1.Client(CLIENT_KEY,
                                client_secret=CLIENT_SECRET,
                                signature_type=SIGNATURE_TYPE_QUERY,
