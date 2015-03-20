@@ -1,5 +1,5 @@
 import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, UniqueConstraint
+from sqlalchemy import Column, BigInteger, Integer, String, ForeignKey, DateTime, UniqueConstraint
 from sqlalchemy.dialects.postgresql.base import UUID
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -15,7 +15,8 @@ class ResourceOwner(Base):
     email = Column(String)
     swift_user = Column(String)
     swift_account = Column(String)
-    quota_used = Column(Integer)
+    quota_used_real = Column(BigInteger)
+    quota_used_logical = Column(BigInteger)
     quota_limit = Column(Integer)
 
 
